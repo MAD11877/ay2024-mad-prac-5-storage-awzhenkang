@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">madpractical5</string>
+    <string name="firstButton">FOLLOW</string>
+    <string name="secondButton">MESSAGE</string>
+
 </resources>
