@@ -73,19 +73,16 @@ public class Login extends AppCompatActivity {
                         UserLogin user = userSnapshot.getValue(UserLogin.class);
 
                         if (user != null && user.getPassword().equals(password)) {
-                            // Password matches
                             Log.d(TAG, "User authenticated successfully.");
                             Toast.makeText(getApplicationContext(), "User Authenticated", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);
                         } else {
-                            // Password does not match
                             Log.d(TAG, "Authentication failed: Incorrect password.");
                             Toast.makeText(getApplicationContext(), "Invalid User!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 } else {
-                    // User does not exist
                     Log.d(TAG, "Authentication failed: User not found.");
                 }
             }
