@@ -2,6 +2,9 @@ package sg.edu.np.mad.madpractical5;
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -9,32 +12,29 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private UserAdapter userAdapter;
-    private MyDBHandler dbHandler;
     private List<User> userList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
         // Initialize the database helper
-        dbHandler = new MyDBHandler(this);
+        MyDBHandler dbHandler = new MyDBHandler(this);
 
         // Fetch the user list from the database
         userList = dbHandler.getUsers();
 
         // Set up the RecyclerView
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        // Set up the adapter and handle the Follow/Unfollow button click
-        userAdapter = new UserAdapter(userList, user -> {
-            // Update the user's follow status
-            user.setFollowed(!user.getFollowed());
-            dbHandler.updateUser(user);  // Update the user in the database
-            userAdapter.notifyItemChanged(userList.indexOf(user));  // Notify the adapter of the change
-        });
+        RecyclerView recyclerView = findViewById(R.id.recyclerview);
+        UserAdapter userAdapter = new UserAdapter(userList, this);
         recyclerView.setAdapter(userAdapter);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
     }
 }

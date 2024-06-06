@@ -1,9 +1,17 @@
 package sg.edu.np.mad.madpractical5;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,20 +20,21 @@ import java.util.List;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
 
-    private List<User> userList;
-    private OnFollowClickListener listener;
+    List<User> userList;
+    Context context;
 
-    public UserAdapter(List<User> userList, OnFollowClickListener listener) {
+    public UserAdapter(List<User> userList,Context context) {
         this.userList = userList;
-        this.listener = listener;
+        this.context = context;
     }
 
     @NonNull
     @Override
     public UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.activity_user_item, parent, false);
-        return new UserViewHolder(itemView);
+                .inflate(R.layout.custom_activity_list, parent, false);
+
+        return new UserViewHolder(itemView, userList);
     }
 
     @Override
@@ -33,9 +42,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         User user = userList.get(position);
         holder.name.setText(user.getName());
         holder.description.setText(user.getDescription());
-        holder.followButton.setText(user.getFollowed() ? "Unfollow" : "Follow");
-
-        holder.followButton.setOnClickListener(v -> listener.onFollowClick(user));
     }
 
     @Override
@@ -43,21 +49,71 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         return userList.size();
     }
 
-    public interface OnFollowClickListener {
-        void onFollowClick(User user);
-    }
 
     public static class UserViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView name, description;
-        public Button followButton, messageButton;
+        public ImageView smallImage;
 
-        public UserViewHolder(View view) {
+        public TextView name, description;
+
+        public UserViewHolder(@NonNull View view, List<User> userList) {
             super(view);
+            smallImage = view.findViewById(R.id.ivSmallImage);
             name = view.findViewById(R.id.tvName);
             description = view.findViewById(R.id.tvDescription);
-            followButton = view.findViewById(R.id.btnFollow);
-            messageButton = view.findViewById(R.id.btnMessage);
+
+            smallImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int num = getAdapterPosition();
+
+                    User clickUser = userList.get(getAdapterPosition());
+
+                    Intent viewAccount = new Intent(smallImage.getContext(), AccountActivity.class);
+
+                    int userId = clickUser.getId();
+
+                    String username = clickUser.getName();
+
+                    String description = clickUser.getDescription();
+
+                    boolean followed = clickUser.getFollowed();
+
+                    Log.i("followed", String.valueOf(followed));
+
+                    viewAccount.putExtra("userId", userId);
+
+                    viewAccount.putExtra("userName", username);
+
+                    viewAccount.putExtra("userDesc", description);
+
+                    viewAccount.putExtra("userFollowed", followed);
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(itemView.getContext());
+
+                    builder.setTitle("Profile");
+                    builder.setMessage(username);
+                    builder.setCancelable(false);
+                    builder.setPositiveButton("VIEW", new
+                            DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    startActivity(itemView.getContext(), viewAccount, null);
+                                }
+                            });
+
+                    builder.setNegativeButton("CLOSE", new
+                            DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                }
+            });
         }
     }
 }

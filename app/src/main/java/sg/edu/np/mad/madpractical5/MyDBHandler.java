@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.Random;
 
 public class MyDBHandler extends SQLiteOpenHelper {
+    private static final int DATABASE_VERSION = 1;
 
     private static final String DATABASE_NAME = "user.db";
-    private static final int DATABASE_VERSION = 1;
 
     public static final String TABLE_NAME = "User";
     public static final String COLUMN_ID = "id";
@@ -59,11 +59,17 @@ public class MyDBHandler extends SQLiteOpenHelper {
         if (cursor != null && cursor.moveToFirst()) {
             do {
                 @SuppressLint("Range") int id = cursor.getInt(cursor.getColumnIndex(COLUMN_ID));
+
                 @SuppressLint("Range") String name = cursor.getString(cursor.getColumnIndex(COLUMN_NAME));
+
                 @SuppressLint("Range") String description = cursor.getString(cursor.getColumnIndex(COLUMN_DESCRIPTION));
+
                 @SuppressLint("Range") boolean followed = cursor.getInt(cursor.getColumnIndex(COLUMN_FOLLOWED)) == 1;
+
                 userList.add(new User(id, name, description, followed));
-            } while (cursor.moveToNext());
+
+            }
+            while (cursor.moveToNext());
             cursor.close();
         }
 
