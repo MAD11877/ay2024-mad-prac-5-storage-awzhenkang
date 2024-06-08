@@ -39,7 +39,7 @@ public class Login extends AppCompatActivity {
             return insets;
         });
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://console.firebase.google.com/project/practical-5-ee9b3/database/practical-5-ee9b3-default-rtdb/data/~2F");
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://practical-5-ee9b3-default-rtdb.asia-southeast1.firebasedatabase.app/");
         mDatabase = database.getReference("user");
 
         // Initialize UI components
