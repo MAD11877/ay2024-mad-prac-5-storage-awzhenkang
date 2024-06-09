@@ -31,8 +31,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     @NonNull
     @Override
     public UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.custom_activity_list, parent, false);
+        LayoutInflater layoutInflater = LayoutInflater.from(context);
+
+        View itemView = layoutInflater.inflate(R.layout.custom_activity_list, parent, false);
 
         return new UserViewHolder(itemView, userList);
     }
@@ -65,9 +66,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             smallImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int num = getAdapterPosition();
+                    int position = getAdapterPosition();
 
-                    User clickUser = userList.get(getAdapterPosition());
+                    User clickUser = userList.get(position);
 
                     Intent viewAccount = new Intent(smallImage.getContext(), AccountActivity.class);
 
@@ -94,7 +95,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
                     builder.setTitle("Profile");
                     builder.setMessage(username);
                     builder.setCancelable(false);
-                    builder.setPositiveButton("VIEW", new
+
+                    builder.setPositiveButton("View", new
                             DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
@@ -102,7 +104,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
                                 }
                             });
 
-                    builder.setNegativeButton("CLOSE", new
+                    builder.setNegativeButton("Close", new
                             DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {

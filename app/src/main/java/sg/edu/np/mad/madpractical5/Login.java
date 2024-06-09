@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -23,6 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
 
 public class Login extends AppCompatActivity {
 
@@ -39,8 +39,9 @@ public class Login extends AppCompatActivity {
             return insets;
         });
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://practical-5-ee9b3-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://practical-5-2d471-default-rtdb.asia-southeast1.firebasedatabase.app");
         mDatabase = database.getReference("user");
+
 
         // Initialize UI components
         EditText etUsername = findViewById(R.id.etUsername);
@@ -55,30 +56,34 @@ public class Login extends AppCompatActivity {
                 Log.d("Username", username);
                 Log.d("Password", password);
 
-                checkUser(username, password);
+                verifyUser(username, password);
             }
         });
     }
 
-    public void checkUser(String username, String password) {
+    public void verifyUser(final String username, final String password) {
         Query query = mDatabase.orderByChild("username").equalTo(username);
-
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-
-                    for (DataSnapshot userSnapshot : snapshot.getChildren()) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
 
                         UserLogin user = userSnapshot.getValue(UserLogin.class);
 
                         if (user != null && user.getPassword().equals(password)) {
+                            // Password matches
                             Log.d(TAG, "User authenticated successfully.");
+
                             Toast.makeText(getApplicationContext(), "User Authenticated", Toast.LENGTH_SHORT).show();
+
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+
                             startActivity(intent);
-                        } else {
+                        }
+                        else {
                             Log.d(TAG, "Authentication failed: Incorrect password.");
+
                             Toast.makeText(getApplicationContext(), "Invalid User!", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -88,8 +93,8 @@ public class Login extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.w(TAG, "verifyUser:onCancelled", error.toException());
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "verifyUser:onCancelled", databaseError.toException());
             }
         });
     }

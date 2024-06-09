@@ -36,7 +36,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE);
 
         // Insert 20 random users
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i <= 20; i++) {
             ContentValues values = new ContentValues();
             values.put(COLUMN_NAME, "User " + i);
             values.put(COLUMN_DESCRIPTION, "Description " + i);

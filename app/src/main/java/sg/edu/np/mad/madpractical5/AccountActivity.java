@@ -32,7 +32,7 @@ public class AccountActivity extends AppCompatActivity {
 
         int id = backEnd.getIntExtra("userId", 0);
 
-        String name = backEnd.getStringExtra("username");
+        String name = backEnd.getStringExtra("userName");
 
         String description = backEnd.getStringExtra("userDesc");
 
@@ -52,7 +52,7 @@ public class AccountActivity extends AppCompatActivity {
 
         tvDescription.setText(description);
 
-        if (followed){
+        if (followed) {
             btnfollow.setText("Unfollow");
         }
         else{
