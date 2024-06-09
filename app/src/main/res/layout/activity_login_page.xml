@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
-            android:layout_marginTop="220dp"
+            android:layout_marginTop="236dp"
             android:text="Username:"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -43,17 +43,16 @@
             android:layout_width="289dp"
             android:layout_height="69dp"
             android:layout_marginStart="4dp"
-            android:layout_marginTop="71dp"
+            android:layout_marginTop="88dp"
             app:layout_constraintStart_toEndOf="@+id/tvUsername"
-            app:layout_constraintTop_toBottomOf="@+id/tvBanner">
-        </EditText>
+            app:layout_constraintTop_toBottomOf="@+id/tvBanner"></EditText>
 
         <TextView
             android:id="@+id/tvPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
-            android:layout_marginTop="340dp"
+            android:layout_marginTop="356dp"
             android:text="Password:"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

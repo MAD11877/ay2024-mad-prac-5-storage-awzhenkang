@@ -23,7 +23,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-
 public class Login extends AppCompatActivity {
 
     DatabaseReference mDatabase;
@@ -41,7 +40,6 @@ public class Login extends AppCompatActivity {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://practical-5-2d471-default-rtdb.asia-southeast1.firebasedatabase.app");
         mDatabase = database.getReference("user");
-
 
         // Initialize UI components
         EditText etUsername = findViewById(R.id.etUsername);
@@ -69,23 +67,16 @@ public class Login extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-
                         UserLogin user = userSnapshot.getValue(UserLogin.class);
-
                         if (user != null && user.getPassword().equals(password)) {
                             // Password matches
                             Log.d(TAG, "User authenticated successfully.");
-
                             Toast.makeText(getApplicationContext(), "User Authenticated", Toast.LENGTH_SHORT).show();
-
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-
                             startActivity(intent);
-                        }
-                        else {
+                        } else {
                             Log.d(TAG, "Authentication failed: Incorrect password.");
-
-                            Toast.makeText(getApplicationContext(), "Invalid User!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Invalid User", Toast.LENGTH_SHORT).show();
                         }
                     }
                 } else {

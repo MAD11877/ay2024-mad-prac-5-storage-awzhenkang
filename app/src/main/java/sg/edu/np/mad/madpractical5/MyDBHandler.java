@@ -1,11 +1,11 @@
 package sg.edu.np.mad.madpractical5;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "user.db";
 
-    public static final String TABLE_NAME = "User";
+    public static final String USERS = "Users";
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_DESCRIPTION = "description";
@@ -28,7 +28,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "("
+        String CREATE_TABLE = "CREATE TABLE " + USERS + "("
                 + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + COLUMN_NAME + " TEXT,"
                 + COLUMN_DESCRIPTION + " TEXT,"
@@ -41,38 +41,46 @@ public class MyDBHandler extends SQLiteOpenHelper {
             values.put(COLUMN_NAME, "User " + i);
             values.put(COLUMN_DESCRIPTION, "Description " + i);
             values.put(COLUMN_FOLLOWED, new Random().nextBoolean() ? 1 : 0);
-            db.insert(TABLE_NAME, null, values);
+            db.insert(USERS, null, values);
         }
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + USERS);
         onCreate(db);
+    }
+
+    public void addUser(User user){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_NAME, user.getName());
+        values.put(COLUMN_DESCRIPTION, user.getDescription());
+        values.put(COLUMN_FOLLOWED, user.getFollowed());
+        db.insert(USERS, null, values);
     }
 
     public List<User> getUsers() {
         List<User> userList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_NAME, null, null, null, null, null, null);
+        Cursor cursor = db.rawQuery(USERS, null);
 
         if (cursor != null && cursor.moveToFirst()) {
             do {
-                @SuppressLint("Range") int id = cursor.getInt(cursor.getColumnIndex(COLUMN_ID));
+                int id = cursor.getInt((int)cursor.getColumnIndex(COLUMN_ID));
 
-                @SuppressLint("Range") String name = cursor.getString(cursor.getColumnIndex(COLUMN_NAME));
+                String name = cursor.getString((int)cursor.getColumnIndex(COLUMN_NAME));
 
-                @SuppressLint("Range") String description = cursor.getString(cursor.getColumnIndex(COLUMN_DESCRIPTION));
+                String description = cursor.getString((int)cursor.getColumnIndex(COLUMN_DESCRIPTION));
 
-                @SuppressLint("Range") boolean followed = cursor.getInt(cursor.getColumnIndex(COLUMN_FOLLOWED)) == 1;
+                boolean followed = cursor.getInt((int)cursor.getColumnIndex(COLUMN_FOLLOWED)) == 1;
 
-                userList.add(new User(id, name, description, followed));
+                User user = new User(id, description, name, followed);
 
-            }
-            while (cursor.moveToNext());
-            cursor.close();
+                userList.add(user);
+            } while (cursor.moveToNext());
         }
-
+        cursor.close();
         return userList;
     }
 
@@ -81,8 +89,16 @@ public class MyDBHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COLUMN_NAME, user.getName());
         values.put(COLUMN_DESCRIPTION, user.getDescription());
-        values.put(COLUMN_FOLLOWED, user.getFollowed() ? 1 : 0);
+        values.put(COLUMN_FOLLOWED, user.getFollowed());
 
-        db.update(TABLE_NAME, values, COLUMN_ID + " = ?", new String[]{String.valueOf(user.getId())});
+        String clause = "id=?";
+        String[] args = {String.valueOf(user.getId())};
+        db.update(USERS, values, clause, args);
+    }
+
+    @Override
+    public void close() {
+        Log.i("Database Operations", "Database is closed.");
+        super.close();
     }
 }

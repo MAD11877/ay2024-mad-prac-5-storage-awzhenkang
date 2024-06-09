@@ -1,7 +1,6 @@
 package sg.edu.np.mad.madpractical5;
 
 public class User {
-
     public int id;
 
     public String name;
