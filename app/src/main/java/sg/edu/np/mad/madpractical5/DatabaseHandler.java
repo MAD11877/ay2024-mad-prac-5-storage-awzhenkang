@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class MyDBHandler extends SQLiteOpenHelper {
+public class DatabaseHandler extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     private static final String DATABASE_NAME = "user.db";
@@ -22,7 +22,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
     public static final String COLUMN_DESCRIPTION = "description";
     public static final String COLUMN_FOLLOWED = "followed";
 
-    public MyDBHandler(Context context) {
+    public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -75,7 +75,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
                 boolean followed = cursor.getInt((int)cursor.getColumnIndex(COLUMN_FOLLOWED)) == 1;
 
-                User user = new User(id, description, name, followed);
+                User user = new User(name, description, id, followed);
 
                 userList.add(user);
             } while (cursor.moveToNext());

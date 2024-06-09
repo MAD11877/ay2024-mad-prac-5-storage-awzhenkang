@@ -25,10 +25,10 @@ public class User {
 
     public boolean getFollowed() {return followed;}
 
-    public User(int id, String name, String description, boolean followed) {
-        this.id = id;
+    public User (String name, String description, int id, boolean followed)  {
         this.name = name;
         this.description = description;
+        this.id = id;
         this.followed = followed;
     }
 }

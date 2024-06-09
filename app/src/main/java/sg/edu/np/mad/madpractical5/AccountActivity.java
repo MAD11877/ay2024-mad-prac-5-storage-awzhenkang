@@ -26,7 +26,7 @@ public class AccountActivity extends AppCompatActivity {
             return insets;
         });
 
-        MyDBHandler dbHandler = new MyDBHandler(this);
+        DatabaseHandler dbHandler = new DatabaseHandler(this);
 
         Intent backEnd = getIntent();
 
@@ -38,7 +38,7 @@ public class AccountActivity extends AppCompatActivity {
 
         boolean followed = backEnd.getBooleanExtra("userFollowed", false);
 
-        User viewUser = new User(id, description, name, followed);
+        User viewUser = new User(name, description, id, followed);
 
         TextView tvName = findViewById(R.id.tvName);
 
